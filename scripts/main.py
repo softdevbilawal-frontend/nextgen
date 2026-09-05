@@ -7,7 +7,18 @@ GitHub Actions is script ko roz ek fix waqt pe run karega (cron).
 """
 import sys
 import traceback
-from scripts import config, topics, gemini_writer, image_fetcher, wordpress_publisher
+from scripts import config, topics, gsc_topics, gemini_writer, image_fetcher, wordpress_publisher
+
+
+def get_todays_topics(n: int) -> list:
+    """Try GSC quick-win keywords first, fall back to manual topics.txt."""
+    gsc_results = gsc_topics.get_quick_win_queries(n)
+    if gsc_results:
+        print(f"[topics] Using {len(gsc_results)} keyword(s) from Google Search Console.")
+        return gsc_results
+
+    print("[topics] No usable GSC data, falling back to data/topics.txt.")
+    return topics.get_next_topics(n)
 
 
 def run_one(topic_info: dict, status: str) -> bool:
@@ -57,9 +68,9 @@ def main():
     # Change to "publish" once you trust the output quality.
     publish_status = "draft"
 
-    topic_list = topics.get_next_topics(config.ARTICLES_PER_RUN)
+    topic_list = get_todays_topics(config.ARTICLES_PER_RUN)
     if not topic_list:
-        print("[warn] No topics left in data/topics.txt. Add more topics.")
+        print("[warn] No topics available from GSC or data/topics.txt. Add more topics.")
         return
 
     success_count = 0

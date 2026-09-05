@@ -37,6 +37,8 @@ jobs:
           WP_SITE_URL: ${{ secrets.WP_SITE_URL }}
           WP_USERNAME: ${{ secrets.WP_USERNAME }}
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
+          GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+          GSC_CREDENTIALS_JSON: ${{ secrets.GSC_CREDENTIALS_JSON }}
           ARTICLES_PER_RUN: "10"
         run: python -m scripts.main
 
