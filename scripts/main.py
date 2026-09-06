@@ -11,14 +11,17 @@ from scripts import config, topics, gsc_topics, gemini_writer, image_fetcher, wo
 
 
 def get_todays_topics(n: int) -> list:
-    """Try GSC quick-win keywords first, fall back to manual topics.txt."""
+    """Try GSC quick-win keywords first, fall back to manual topics.txt.
+    Manual topics are only "peeked" here - they get marked used only after
+    a successful publish, so failed attempts (e.g. all Gemini keys exhausted)
+    are retried on the next run instead of being wasted."""
     gsc_results = gsc_topics.get_quick_win_queries(n)
     if gsc_results:
         print(f"[topics] Using {len(gsc_results)} keyword(s) from Google Search Console.")
         return gsc_results
 
     print("[topics] No usable GSC data, falling back to data/topics.txt.")
-    return topics.get_next_topics(n)
+    return topics.peek_next_topics(n)
 
 
 def run_one(topic_info: dict, status: str) -> bool:
@@ -78,6 +81,10 @@ def main():
         try:
             if run_one(topic_info, publish_status):
                 success_count += 1
+                # Only remove from the manual pool if it actually came from there
+                # (GSC-sourced topics don't have _raw_line and don't need this).
+                if "_raw_line" in topic_info:
+                    topics.mark_used(topic_info["_raw_line"])
         except Exception as e:
             print(f"[error] Failed on topic '{topic_info['topic']}': {e}")
             traceback.print_exc()
