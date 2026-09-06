@@ -18,6 +18,7 @@ WP_USERNAME = os.environ.get("WP_USERNAME")
 WP_APP_PASSWORD = os.environ.get("WP_APP_PASSWORD")  # WordPress "Application Password", not your login password
 
 ARTICLES_PER_RUN = int(os.environ.get("ARTICLES_PER_RUN", "10"))
+SKIP_IMAGE = os.environ.get("SKIP_IMAGE", "false").lower() == "true"
 
 # Google Search Console (optional - falls back to data/topics.txt if not set)
 GSC_SITE_URL = os.environ.get("GSC_SITE_URL")  # e.g. https://yourblog.com/

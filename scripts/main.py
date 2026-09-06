@@ -39,14 +39,17 @@ def run_one(topic_info: dict, status: str) -> bool:
     print("[ok] Self-review passed.")
 
     media_id = None
-    image = image_fetcher.get_image(article["image_query"])
-    if image:
-        media_id = wordpress_publisher.upload_featured_image(
-            image["url"], article["alt_text"]
-        )
-        print(f"[ok] Image uploaded, media_id={media_id}")
+    if config.SKIP_IMAGE:
+        print("[image] SKIP_IMAGE is set, skipping image step for this test run.")
     else:
-        print("[warn] No image found for query, publishing without featured image.")
+        image = image_fetcher.get_image(article["image_query"])
+        if image:
+            media_id = wordpress_publisher.upload_featured_image(
+                image["url"], article["alt_text"]
+            )
+            print(f"[ok] Image uploaded, media_id={media_id}")
+        else:
+            print("[warn] No image found for query, publishing without featured image.")
 
     result = wordpress_publisher.publish_post(
         title=article["title"],
