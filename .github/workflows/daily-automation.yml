@@ -49,6 +49,7 @@ jobs:
           WP_APP_PASSWORD: ${{ secrets.WP_APP_PASSWORD }}
           GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
           GSC_CREDENTIALS_JSON: ${{ secrets.GSC_CREDENTIALS_JSON }}
+          SHEET_CSV_URL: ${{ secrets.SHEET_CSV_URL }}
           ARTICLES_PER_RUN: ${{ github.event.inputs.articles_per_run || '10' }}
           SKIP_IMAGE: ${{ github.event.inputs.skip_image || 'false' }}
         run: python -m scripts.main

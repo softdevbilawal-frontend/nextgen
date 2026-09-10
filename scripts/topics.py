@@ -12,6 +12,14 @@ TOPICS_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "topics.txt"
 USED_FILE = os.path.join(os.path.dirname(__file__), "..", "data", "used_topics.txt")
 
 
+def load_used_raw_lines() -> set:
+    """Returns a set of raw topic lines that have already been used (from used_topics.txt)."""
+    if not os.path.exists(USED_FILE):
+        return set()
+    with open(USED_FILE, "r", encoding="utf-8") as f:
+        return {line.strip() for line in f if line.strip()}
+
+
 def peek_next_topics(n: int) -> list:
     """Reads (without removing) the next n topics from the pool."""
     if not os.path.exists(TOPICS_FILE):

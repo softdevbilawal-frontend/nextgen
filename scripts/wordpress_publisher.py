@@ -14,6 +14,11 @@ def _auth():
 def upload_featured_image(image_url: str, alt_text: str, filename: str = "featured.jpg") -> int:
     """Downloads image from image_url, uploads to WP media library, returns media ID."""
     img_bytes = requests.get(image_url, timeout=60).content
+    return upload_featured_image_bytes(img_bytes, alt_text, filename)
+
+
+def upload_featured_image_bytes(img_bytes: bytes, alt_text: str, filename: str = "featured.jpg") -> int:
+    """Uploads raw image bytes (e.g. from AI generation) to WP media library, returns media ID."""
     endpoint = f"{config.WP_SITE_URL}/wp-json/wp/v2/media"
     headers = {
         "Content-Disposition": f'attachment; filename="{filename}"',
@@ -24,7 +29,6 @@ def upload_featured_image(image_url: str, alt_text: str, filename: str = "featur
     media = resp.json()
     media_id = media["id"]
 
-    # Set alt text separately
     requests.post(
         f"{endpoint}/{media_id}",
         json={"alt_text": alt_text},

@@ -23,3 +23,6 @@ SKIP_IMAGE = os.environ.get("SKIP_IMAGE", "false").lower() == "true"
 # Google Search Console (optional - falls back to data/topics.txt if not set)
 GSC_SITE_URL = os.environ.get("GSC_SITE_URL")  # e.g. https://yourblog.com/
 GSC_CREDENTIALS_JSON = os.environ.get("GSC_CREDENTIALS_JSON")  # full service-account JSON as a string
+
+# Google Sheet "dashboard" for topics (published-to-web CSV link, no auth needed)
+SHEET_CSV_URL = os.environ.get("SHEET_CSV_URL")
